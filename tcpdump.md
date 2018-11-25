@@ -47,7 +47,9 @@ decode_prefix6(netdissect_options *ndo,
 
 # Suggested Solution
 Initialize buf[0] to '\0' in 'print_prefix'. 
+
 `buf[0] = '\0';`
+
 (Just as print-cnfp.c and print-bgp.c do.)
 
 # How I Found It
