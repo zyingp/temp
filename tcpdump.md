@@ -1,10 +1,12 @@
 
+# The Problem
+
 I found a buffer overread problem in the `print_prefix` function of print-hncp.c. 
 
 Set a breakpoint at the `print_prefix` function, and run tcpdump like 
     tcpdump -ee -vv -nnr id_57.pcap
 (The special pcap file could be downloaded from https://github.com/zyingp/temp/blob/master/id_57.pcap)
-Then in the `print_prefix` function, the `prefix` variable's value is 0xff, `max_length` is 39, and `is_ipv4_mapped_address` function return `No`. So the program enters the else-clause and called `decode_prefix6` (defined in print-bgp.c). However, the `decode_prefix6` directly returns -1 (since the `plen` in it is 0xff) and does not fill any C string in the passed-in `buf`. Then after back to the `print_prefix` function, since the `buf` variable is not initialized, so the last `ND_PRINT("%s", buf)` in `print_prefix` **may overread the 46-byte-long buffer** `buf` (until meets a '\0' byte).  
+Then in the `print_prefix` function, the `prefix` variable's value is 0xff, `max_length` is 39, and the `is_ipv4_mapped_address` function return `No`. So the program enters the else-clause and calls `decode_prefix6` (defined in print-bgp.c). However, the `decode_prefix6` directly returns -1 (since the `plen` in it is 0xff) and does not fill any C string in the passed-in `buf`. Then after back to the `print_prefix` function, the last `ND_PRINT("%s", buf)` line in `print_prefix` **may overread the 46-byte-long buffer** `buf` (until meets a '\0' byte), since the `buf` variable is not initialized.  
 
 ```C
 static int
@@ -43,7 +45,14 @@ decode_prefix6(netdissect_options *ndo,
 }
 ``` 
 
-I found the problem by fuzzing with ASan, and the bug can be reproduced in ASan with 32-bit  tcpdump executable like below.
+# Suggested Solution
+Initialize buf[0] to '\0' in 'print_prefix'. 
+`buf[0] = '\0';`
+(Just as print-cnfp.c and print-bgp.c do.)
+
+# How I Found It
+
+I found the problem by fuzzing with AFL & ASan, and the bug can be reproduced in ASan with 32-bit  tcpdump executable like below.
 Prepare env.
 ```
     dpkg --add-architecture i386
