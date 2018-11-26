@@ -3,6 +3,8 @@
 
 I found a buffer overread problem in the `print_prefix` function of print-hncp.c. 
 
+[2018/11/26] Update: CVE-2018-19519 is assigned to the problem.
+
 Set a breakpoint at the `print_prefix` function, and run tcpdump like 
     tcpdump -ee -vv -nnr id_57.pcap
 (The special pcap file could be downloaded from https://github.com/zyingp/temp/blob/master/id_57.pcap)
