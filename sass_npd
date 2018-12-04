@@ -1,0 +1,21 @@
+@supports (foo: bar) {
+  div {
+    foo: bar;
+  }
+}
+@supports not (foo: rar) {
+  div {
+    bar: baz;
+  }
+}
+@supports (foo: bar) and (bar: baz) {
+  div {
+foo: bar;
+    bar: baz;
+  }
+}
+@supports (foo: bar) or  {
+  div {
+    bar: baz;
+  }
+}
