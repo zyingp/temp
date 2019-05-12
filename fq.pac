@@ -14,6 +14,7 @@ var domains = {
     "darpa.mil": 1,
     "dtic.mil": 1,
     "bluekai.com": 1,
+    "golang.org": 1,
     "blogspot.com":1
 };
  
