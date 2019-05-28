@@ -7,7 +7,7 @@ var domains = {
     "googleusercontent.com": 1,
     "googleblog.com": 1,
     "twitter.com": 1,
-    "zh.wikipedia.org": 1,
+    "wikipedia.org": 1,
     "cybergrandchallenge.com": 1,
     "xys.org": 1,
     "googleapis.com": 1,
