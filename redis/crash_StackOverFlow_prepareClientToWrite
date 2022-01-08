@@ -1,0 +1,3 @@
+PSYNC replicationid -5 
+SLOWLOG GET  3  
+MEMORY HELP  
